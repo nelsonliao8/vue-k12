@@ -45,7 +45,7 @@ export default [
                                 name: 'xxMusic',
                                 component: () => import('../views/dashboard/xxmusic.vue'),
                                 meta: {
-                                        title: '小学Music ',
+                                        title: '音乐教科书 ',
                                         icon: 'AudioOutlined',
                                         roles: ['admin', 'guest']
                                 }
