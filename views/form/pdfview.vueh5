@@ -1,0 +1,83 @@
+<template>
+  <a-modal
+    v-model:visible="visible"
+    width="90%"
+    wrapClassName="full-modal"
+    title="PDF 预览"
+    ok-text="确认"
+    cancel-text="取消"
+    @ok="close"
+    @cancel="close"
+  >
+    <a-spin :spinning="loading" tip="Loading...">
+      <div style="height: 100px"></div>
+    </a-spin>
+    <div v-show="!loading" class="pdf-view">
+      <div class="pdf" id="pdfView"></div>
+    </div>
+  </a-modal>
+</template>
+<script setup lang="ts">
+import Pdfh5 from "pdfh5/js/pdfh5.js";
+import "pdfh5/css/pdfh5.css";
+import { onMounted, defineExpose, ref, nextTick } from "vue";
+
+const visible = ref(false);
+const loading = ref(true);
+
+onMounted(() => {});
+
+const openPdf = (url) => {
+  visible.value = true;
+
+  nextTick(() => {
+    const pdfh5 = new Pdfh5("#pdfView", {
+      pdfurl: url,
+    });
+
+    pdfh5.on("complete", (status, msg, time) => {
+      loading.value = false;
+      console.log(status, msg, time);
+    });
+  });
+};
+
+const close = () => {
+  visible.value = false;
+  loading.value = true;
+};
+
+defineExpose({
+  openPdf,
+});
+</script>
+
+<style lang="less" scoped>
+.pdf-view {
+  height: 100%;
+  .pdf {
+    height: 100%;
+  }
+  /deep/ .pdfViewer {
+    padding: 0;
+  }
+}
+
+.full-modal {
+  .ant-modal {
+    max-width: 90%;
+    top: 0;
+    padding-bottom: 0;
+    margin: 0;
+  }
+  .ant-modal-content {
+    display: flex;
+    flex-direction: column;
+    height: calc(50vh);
+    overflow: auto;
+  }
+  .ant-modal-body {
+    flex: 1;
+  }
+}
+</style>

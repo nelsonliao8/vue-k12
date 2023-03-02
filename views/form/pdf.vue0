@@ -1,0 +1,34 @@
+<template>
+  <div class="pdf-page">
+	<div ref="container" id="pdfContainer">
+    		<div id="viewer" class="pdfViewer"></div>
+  	</div>
+  </div>
+</template>
+<script>
+	onMounted(async () => {
+        let pdfjs = await import('pdfjs-dist/build/pdf.js');
+        let pdfjsWorker = await import('pdfjs-dist/build/pdf.worker.js');
+        let pdfjsViewer = await import('pdfjs-dist/web/pdf_viewer.js');
+        pdfjs.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.7.570/pdf.worker.min.js';
+        let pdfcontainer = document.getElementById("pdfContainer");
+        let pdfViewer = new pdfjsViewer.PDFViewer({
+        container: pdfcontainer,
+        renderer: {
+                   type: String,
+                   default: 'canvas'
+                  },
+        eventBus: new pdfjsViewer.EventBus(),
+      });
+      let loadingTask = await  pdfjs.getDocument({
+                      cMapUrl:'https://cdn.jsdelivr.net/npm/pdfjs-dist@2.5.207/cmaps/',
+                      cMapPacked:true,
+                      url: "https://v1.ykt.cbern.com.cn/65/document/2ca6040e6c5e496783f11589a89b7d1b/pdf.pdf",
+                  });
+
+
+      let pdf = await loadingTask.promise;
+      pdfViewer.setDocument(pdf);
+      
+      });
+</script>

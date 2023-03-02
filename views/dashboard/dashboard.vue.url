@@ -1,0 +1,90 @@
+<!--
+ * @Author: mingxing.huang
+ * @Date: 2020-10-29 20:56:05
+-->
+<template>
+	<div class="dashboard-box">
+		<a-list :grid="{ gutter: 16, column: 2}" :data-source="data">
+			<template v-slot:renderItem="{ item }">
+				<a-list-item class="list-item">
+					<a-card :title="item.title">
+						<a-skeleton v-if="showSkeleton" active />
+						<template v-else>
+							{{ item.des }}<a target="_blank" :href="item.url">文档</a>
+						</template>
+					</a-card>
+				</a-list-item>
+			</template>
+		</a-list>
+	</div>
+</template>
+
+<script>
+import { ref } from 'vue'
+//import pdf from 'vue-pdf'
+export default {
+
+	setup() {
+		const showSkeleton = ref(true)
+		setTimeout(() => {
+			showSkeleton.value = false
+		}, 800)
+		const data = ref([
+		                       {
+                                title: '小学语文',
+                                url:    'https://v3.ykt.cbern.com.cn/65/document/70222d7573514d41ae18f1b2fc3191d4/pdf.pdf',
+                                des:
+                                        '一年级 上册'
+				//url: 'https://v1.ykt.cbern.com.cn/65/document/4e033b48bd17430d89abc042a8a4acc6/pdf.pdf'
+				//des: '一年级 下册'
+                                        },
+                        {
+                                title: '小学语文',
+                                url:    'https://v1.ykt.cbern.com.cn/65/document/028d292845da4dd3b9b54b1ff29d7702/pdf.pdf',
+                                des:
+                                        '二年级 上册'
+//				url: 'https://v3.ykt.cbern.com.cn/65/document/fe996334408946209e38e4d2e2220fa3/pdf.pdf',
+//				des:    '二年级 下册'
+                                        },
+
+                {
+                                title: '小学语文',
+                                url: 'https://v1.ykt.cbern.com.cn/65/document/2ca6040e6c5e496783f11589a89b7d1b/pdf.pdf',
+                                des:
+                                        '三年级 上册(2018版)'
+                                },
+                        {
+                                title: '小学语文',
+                                url: 'https://v3.ykt.cbern.com.cn/65/document/ae4ebae2747347adb0656471b5285b34/pdf.pdf',
+                                des:
+                                        '四年级 上册(2019版)'
+                        },
+			{
+                                title: '小学语文',
+                                url: 'https://v2.ykt.cbern.com.cn/65/document/a72b8b2f5e724f2d9dc044cdd9e7d4a2/pdf.pdf',
+                                des:
+                                        '五年级 上册(2019版)'
+                        },
+			{
+				title: '小学语文',
+				url: 'https://v2.ykt.cbern.com.cn/65/document/1b474b1f7d384c4cb9446eec61bb507b/pdf.pdf',
+				des:
+					'六年级 上册(2019版)'
+			}
+
+		])
+		return { data, showSkeleton }
+	}
+}
+</script>
+
+<style lang="less">
+.dashboard-box {
+	.ant-card-bordered {
+		&:hover {
+			box-shadow: rgba(@primary-color, 0.8) 0px 0px 2px 2px;
+			// border-color: @primary-color;
+		}
+	}
+}
+</style>

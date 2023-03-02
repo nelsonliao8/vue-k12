@@ -1,0 +1,52 @@
+loadAudio: params => { // 获取录音
+    return axios.post(`${base_url}/audio/loadAudio`, params, {
+      responseType: 'blob'
+    }).then(res => res.data)
+ }
+
+getAudio () {
+  var params = new URLSearchParams();
+  params.append('name', this.originalAudioItem.name);
+  params.append('path', this.originalAudioItem.labelPath);
+  audio
+    .downAudio(params)
+    .then(res => {
+      // res 返回blob对象，将文件流转为json处理音频获取失败情况
+      this.fileToJson(res).then(result => {
+        if (result.code === 1) { // 获取音频失败
+          this.loading = false;
+          this.$message.error(result.msg);
+        } else {
+          this.handleFileStream(res)
+        }
+      })
+    })
+    .catch(error => {
+      console.log('error', error);
+    });
+},
+/**
+ * 将file对象（.json文件）转为json对象
+ * @param {File} file file对象
+ */
+fileToJson (file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = res => {
+      const { result } = res.target // 得到字符串
+      const data = JSON.parse(result) // 解析成json对象
+      resolve(data)
+    } // 成功回调
+    reader.onerror = err => {
+      reject(err)
+    } // 失败回调
+    reader.readAsText(new Blob([file]), 'utf-8') // 按照utf-8编码解析
+  })
+},
+// 处理后台返回的文件流并下载
+handleFileStream (fileStream) {
+  var blod = new Blob([fileStream]);
+  this.audioSrc = URL.createObjectURL(blod);
+  console.log('audioSrc', this.audioSrc)
+}
+

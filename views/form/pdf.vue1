@@ -1,0 +1,70 @@
+<template>
+  <div>
+	<div class="div">
+		<a-button @click="prev">Prev</a-button>
+		<a-button @click="next">Next</a-button>
+	</div>
+	<vue-pdf-embed :source="source"
+		class="vue-pdf-embed"
+		:style="scaleFun"
+		:page="pageNum" />
+  </div>
+</template>
+
+<script>
+import VuePdfEmbed from "vue-pdf-embed";
+import { createLoadingTask } from "vue3-pdfjs/esm";
+
+export default {
+  components: {VuePdfEmbed,},
+  data() {
+    return {
+	source: "https://v1.ykt.cbern.com.cn/65/document/2ca6040e6c5e496783f11589a89b7d1b/pdf.pdf",
+	pageNum: 1,
+	scale: 1,
+	numPages: 0,
+    };
+  },
+  mounted() {
+	const loadingTask = createLoadingTask(this.source);
+	loadingTask.promise.then((pdf) => {
+		this.numPages=pdf.numPages;
+	});
+  },
+  computed: {
+	scaleFun(index) {
+		var scale = this.scale;
+		return `transform:scale(${scale})`;
+	}, 
+  },
+  methods: {
+	prev() {
+		if (this.pageNum > 1) {
+			this.pageNum -= 1;
+		}
+	},
+	next() {
+		if (this.pageNum < this.numPages) {
+			this.pageNum += 1;
+		}
+	},
+	zoomL() {
+		this.scale += 0.1;
+	},
+	zoomS() {
+ 		this.scale -= 0.1;
+	},
+  },
+};
+</script>
+
+<style scoped>
+.div {
+  top: 0;
+  position: fixed;
+  z-index: 999;
+}
+.vue-pdf-emed {
+  text-align: center;
+}
+</style> 	
